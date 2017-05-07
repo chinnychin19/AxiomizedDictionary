@@ -111,3 +111,23 @@ Object.keys(dict).forEach(function(word) {
 console.log("Number of words: " + num_words);
 console.log("Average number of words in definition: " + num_definition_words / num_words);
 console.log("Words with empty definitions: " + words_with_empty_definitions.toArray());
+
+// serialize the dependency map -- in a separate program, we'll attempt to find an axiom
+console.log("Serializing the dependency map...");
+
+function println(stream, data) {
+    stream.write(data);
+    stream.write("\n");
+}
+var stream = fs.createWriteStream('dependencies.txt');
+Object.keys(dict).forEach(function(word) {
+    var dependencies = dict[word];
+    // an empty set joins to be undefined, so OR it with an empty result
+    var dependencies_string = dependencies.join(",") || "";
+    println(stream, word);
+    println(stream, dependencies_string);
+});
+stream.end();
+
+// Done
+console.log("Done!");
